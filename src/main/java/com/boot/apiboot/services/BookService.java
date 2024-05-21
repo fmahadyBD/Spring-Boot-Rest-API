@@ -1,7 +1,10 @@
 package com.boot.apiboot.services;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
+
 import com.boot.apiboot.entities.Books;
 
 
@@ -43,5 +46,18 @@ public  class BookService {
     return book;
    }
 
+
+   public Books create(Books b){
+
+     list.add(b);
+
+     return b;// it will return the book for show
+   }
+   public void deleteBook(int bookId){
+
+    list=list.stream().filter(book->book.getId()!=bookId).collect(Collectors.toList());
+    //if match then skipped
+
+   }
     
 }

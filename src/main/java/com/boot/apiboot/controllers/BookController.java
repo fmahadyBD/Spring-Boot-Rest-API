@@ -3,17 +3,15 @@ package com.boot.apiboot.controllers;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-// import org.springframework.stereotype.Controller;
-// import org.springframework.web.bind.annotation.RequestMapping;
-// import org.springframework.web.bind.annotation.RequestMethod;
-// import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.boot.apiboot.entities.Books;
 import com.boot.apiboot.services.BookService;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 // @Controller // when don't use the REST controller
@@ -57,6 +55,26 @@ public class BookController {
     public Books getbook(@PathVariable("id") int id){
 
         return bookService.getBookById(id);
+
+    }
+
+    // create new record;
+
+    @PostMapping("/books")
+    public Books addBook(@RequestBody Books books){
+
+       Books b= this.bookService.create(books);
+       System.out.println(books);
+        return b;
+
+    }
+
+    @DeleteMapping("/books/{bookId}")
+    public void deleteBook(@PathVariable("bookId") int id){
+
+        this.bookService.deleteBook(id);// it call the buisness logic by method
+    
+
 
     }
 }
