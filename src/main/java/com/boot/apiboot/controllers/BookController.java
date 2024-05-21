@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -75,6 +76,13 @@ public class BookController {
         this.bookService.deleteBook(id);// it call the buisness logic by method
     
 
+
+    }
+
+    @PutMapping("/books/{bookId}")
+    public Books bookUpdate(@RequestBody Books books ,@PathVariable("bookId") int bookId ){
+        this.bookService.bookUpdate(books,bookId);
+        return books;
 
     }
 }

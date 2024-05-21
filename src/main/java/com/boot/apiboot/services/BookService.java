@@ -59,5 +59,16 @@ public  class BookService {
     //if match then skipped
 
    }
+   public void bookUpdate(Books bookNew,int id){
+
+    list = list.stream().map(b->{
+        if(b.getId()==id){
+            b.setTitle(bookNew.getTitle());
+            b.setAuthor(bookNew.getAuthor());
+        }
+        return b;
+    }).collect(Collectors.toList());
+
+   }
     
 }
