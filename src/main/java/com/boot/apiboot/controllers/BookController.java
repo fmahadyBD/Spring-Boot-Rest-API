@@ -1,8 +1,11 @@
 package com.boot.apiboot.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -36,7 +39,11 @@ public class BookController {
     @GetMapping("/books")
     // public String getBooks(){
     // public Books getBooks(){
-    public List<Books> getBooks(){
+    // public List<Books> getBooks(){
+        //use status
+
+
+    public ResponseEntity<List<Books>> getBooks(){
         // now return the json(jection convetert it in to json) type data. So i need to return the class type data;
 
         // Books book = new Books();
@@ -45,44 +52,76 @@ public class BookController {
         // book.setAuthor("x");
         // return book;
 
+        List<Books> list= this.bookService.getAllbook();
+        if(list.size()<=0){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(list);
+       
 
-        return this.bookService.getAllbook();
+
     }
     
 
 
 
     @GetMapping("/books/{id}")
-    public Books getbook(@PathVariable("id") int id){
+    public ResponseEntity<Books> getbook(@PathVariable("id") int id){
+        Books book=null;
+        book=bookService.getBookById(id);
+        if(book==null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
 
-        return bookService.getBookById(id);
+        return ResponseEntity.of(Optional.of(book));
 
     }
 
     // create new record;
 
     @PostMapping("/books")
-    public Books addBook(@RequestBody Books books){
+    public ResponseEntity<Books> addBook(@RequestBody Books books){
 
-       Books b= this.bookService.create(books);
-       System.out.println(books);
-        return b;
+        try {
+            Books b= this.bookService.create(books);
+            return ResponseEntity.of(Optional.of(b));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();        }
+
+      
+
+       
 
     }
 
     @DeleteMapping("/books/{bookId}")
-    public void deleteBook(@PathVariable("bookId") int id){
+    public ResponseEntity<Void> deleteBook(@PathVariable("bookId") int id){
 
-        this.bookService.deleteBook(id);// it call the buisness logic by method
+        try {
+            this.bookService.deleteBook(id);// it call the buisness logic by method
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     
 
 
     }
 
     @PutMapping("/books/{bookId}")
-    public Books bookUpdate(@RequestBody Books books ,@PathVariable("bookId") int bookId ){
-        this.bookService.bookUpdate(books,bookId);
-        return books;
+    public ResponseEntity<Books> bookUpdate(@RequestBody Books books ,@PathVariable("bookId") int bookId ){
+
+
+        try {
+            
+            this.bookService.bookUpdate(books,bookId);
+            return ResponseEntity.ok().body(books);
+        } catch (Exception e) {
+           
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
 
     }
 }
